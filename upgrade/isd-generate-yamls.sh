@@ -7,11 +7,9 @@ sleep 30
 echo $version
 #beta=$(echo $chartVersion | awk -F - '{print $NF}' | grep -c b)
 if [ "$beta" = "true" ]; then
-  helm repo add staging-helm https://opsmx.jfrog.io/artifactory/opsmx-helm-local
-  helm repo list
-  helm repo update
-  helm search repo staging-helm --versions
-  helm pull staging-helm/oes --version="$version"
+  REG_PAT=Network123!
+  echo $REG_PAT | helm registry login registry-1.docker.io -u opsmx11 --password-stdin
+  helm pull oci://registry-1.docker.io/opsmx11/oes --version "$version"
 else
 helm repo add isd https://helmcharts.opsmx.com/
 if [ $? != 0 ]; then
