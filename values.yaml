@@ -38,7 +38,7 @@ global:
   ## ldap configuration used in oes-gate, oes-platform and spinnaker gate for authentication and authorization
   ldap:
     managerPassword: encrypted:ldappassword:ldappassword
-    enable: true # Set to false if you are using the saml/Okta for ISD
+    enabled: true # Set to false if you are using the saml/Okta for ISD
 
    ## Valid admin details for ISD authorization
   saporgate:
