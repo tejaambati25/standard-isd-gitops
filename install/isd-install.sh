@@ -122,7 +122,7 @@ sed -i "s/encrypted:$keyName:$keyName/$value/g" $file
 done < secret-strings.list
 done < tmp1.list
 sed -i "s/encrypted%3Agittoken%3Agittoken/$gittoken/g" isd/oes/templates/secrets/opsmx-gitops-secret.yaml
-sed -i 's/yml:/yml: |/' /repo/isd/oes/templates/sapor-gate/sapor-gate-secret.yaml
+#sed -i 's/yml:/yml: |/' /repo/isd/oes/templates/sapor-gate/sapor-gate-secret.yaml
 kubectl apply -R -f /repo/isd/ -n $namespace
 if [ $? -eq 0 ]; then  
      echo "##################Kubernetes manifest sucessfully applied into the $namespace########################"
