@@ -7,7 +7,7 @@ sleep 30
 echo $version
 #beta=$(echo $chartVersion | awk -F - '{print $NF}' | grep -c b)
 if [ "$beta" = "true" ]; then
-  REG_PAT=Network123!
+  REG_PAT=aWTpAuGuU_9c#cK
   echo $REG_PAT | helm registry login registry-1.docker.io -u opsmx11 --password-stdin
   helm pull oci://registry-1.docker.io/opsmx11/oes --version "$version"
 else
