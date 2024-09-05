@@ -39,8 +39,8 @@ NOTE: We recommend that we start with the defaults, updating just the URL and gi
   
   ```console
   $ kubectl -n namespace create secret generic ldap-manager-password \
-  --from-literal=LDAP_ADMIN_PASSWORD=opsmxadmin123 \
-  --from-literal=LDAP_CONFIG_PASSWORD=opsmxconfig123 \
+  --from-literal LDAP_ADMIN_PASSWORD=opsmxadmin123 \
+  --from-literal LDAP_CONFIG_PASSWORD=opsmxconfig123 \
   --from-literal ldapmanagerpassword=opsmxadmin123
   $ kubectl -n namespace create secret generic oes-redis --from-literal redispassword=password
   $ kubectl -n namespace create secret generic rabbitmq --from-literal rabbitmqpassword=Networks123
