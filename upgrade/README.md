@@ -1,24 +1,24 @@
 
 # Upgrade Instructions
 
-Please follow these instructions if you are upgrading from 4.0.3.1 (to 4.0.4.3).The current installtion (4.0.3.1) could have been installed using helm (Scenario A) or using the gitops installer (Scenario B). Please follow the steps as per your current scenario.
+Please follow these instructions if you are upgrading from 4.0.4.2 (to 2024.06.00).The current installtion (4.0.4.2) could have been installed using helm (Scenario A) or using the gitops installer (Scenario B). Please follow the steps as per your current scenario.
 
 **WARNING**: Please backup all the databases, in particualr the Posgres DB, BEFORE begining the upgrade. Backup procedures may differ depending your usage of external DBs and Spinnaker configuration. 
 
 ## Scenario A
 Use these instructions if:
-- You have a 4.0.3.1 installed using the helm installer and
+- You have a 4.0.4.2 installed using the helm installer and
 - Already have a "gitops-repo" for Spinnaker Configuration
 - Have values.yaml that was used for helm installation
 
 Execute these commands, replacing "gitops-repo" with your repo
 - `git clone `**https://github.com/.../gitops-repo**
-- `git clone https://github.com/OpsMx/standard-isd-gitops.git -b 4.0.4.3`
+- `git clone https://github.com/OpsMx/standard-isd-gitops.git -b 2024.06.00`
 - `cp standard-isd-gitops/default/profiles/echo-local.yml gitops-repo/default/profiles/`
 - `cp -r standard-isd-gitops/upgrade gitops-repo`
 - `cd gitops-repo`
-- Copy the existing "values.yaml", that was used for previous installation into this folder. We will call it values-4041.yaml
-- Update the values-4041.yaml as per the requirement
+- Copy the existing "values.yaml", that was used for previous installation into this folder. We will call it values-4042.yaml
+- Update the values-4042.yaml as per the requirement
 - Copy the updated values file as "values.yaml" (file name is important)
 - create gittoken secret. This token will be used to authenticate to the gitops-repo
    - `kubectl -n opsmx-isd create secret generic gittoken --from-literal gittoken=PUT_YOUR_GITTOKEN_HERE` 
@@ -33,19 +33,19 @@ Execute these commands, replacing "gitops-repo" with your repo
 
 ## Scenario B
 Use this set of instructions if:
-a) You have a 4.0.3.1 installed using gitops installer
+a) You have a 4.0.4.2 installed using gitops installer
 b) Already have a gitops-repo for ISD (AP and Spinnaker) Configuration
 
 Execute these commands, replacing "gitops-repo" with your repo
 Execute these commands, replacing "gitops-repo" with your repo
 - `git clone `**https://github.com/.../gitops-repo**
-- `git clone https://github.com/OpsMx/standard-isd-gitops.git -b 4.0.4.3`
+- `git clone https://github.com/OpsMx/standard-isd-gitops.git -b 2024.06.00`
 - `cp -r standard-isd-gitops/upgrade gitops-repo/` 
 - `cd gitops-repo`
 - Check that a "values.yaml" file exists in this directory (root of the gitops-repo)
 
 ## Common Steps
-Upgrade sequence: (4.0.3.1 to 4.0.4.3)
+Upgrade sequence: (4.0.4.2 to 2024.06.00)
 1. Ensure that "default" account is configured to deploy to the ISD namespace (e.g. opsmx-isd)
 2. If you have modified "sampleapp" or "opsmx-gitops" applications, please backup them up using "syncToGit" pipeline opsmx-gitops application.
 3. Copy the bom from standard-isd-gitops.git to the gitops-repo
@@ -64,11 +64,11 @@ Upgrade sequence: (4.0.3.1 to 4.0.4.3)
    - (Optional) Refer to [this](https://docs.google.com/document/d/1FgbvGeylTmWKBFKZNs2mMkKlkxHpyzPMEy5wJCaKSxk/edit) document if you want to enable the new Insights pages (Pipeline Insights and User Insights) added to ISD.
    - **DB Upgrade**:
    
-       Upgrade from ISD 4.0.3.1 to 4.0.4.3 involves DB changes so, dbmigration flag in values.yaml should be set to true
+       Upgrade from ISD 4.0.4.2 to 2024.06.00 involves DB changes so, dbmigration flag in values.yaml should be set to true
        ```
        dbmigration:
-         enable: true
-         versionFrom: 4.0.3.1 ## We need to update this flag if we want to run migration from other ISD versions. For eg: versionFrom: 4.0.3.1
+         enable: false
+         versionFrom: 4.0.4.2 ## We need to update this flag if we want to run migration from other ISD versions. For eg: versionFrom: 4.0.4.2
        ```
 9. Push changes to git: `git add -A; git commit -m "Upgrade related changes"; git push`
 
@@ -87,7 +87,15 @@ Upgrade sequence: (4.0.3.1 to 4.0.4.3)
 
 13. Compare and merge branch: This job should have created a branch on the gitops-repo with the helmchart version number specified in upgrade-inputcm.yaml. Raise a PR and check what changes are being made. Once satisfied, merge the PR.
 
-14. `kubectl -n opsmx-isd replace --force -f ISD-Apply-yamls-job.yaml`
+14. We should create these secrets in namespace before helm installation, Create secrets ldap,redis,db,rabbitmq with following secret names ldap-manager-password,rabbitmq,oes-redis,oes-db.
+  
+-  `kubectl -n namespace create secret generic ldap-manager-password --from-literal LDAP_ADMIN_PASSWORD=opsmxadmin123 --from-literal 
+    LDAP_CONFIG_PASSWORD=opsmxconfig123 --from-literal ldapmanagerpassword=opsmxadmin123`
+- `kubectl -n namespace create secret generic oes-redis --from-literal redispassword=password`
+- `kubectl -n namespace create secret generic rabbitmq --from-literal rabbitmqpassword=Networks123`
+- `kubectl -n namespace create secret generic oes-db --from-literal pgpassword=networks123`
+
+15. `kubectl -n opsmx-isd replace --force -f ISD-Apply-yamls-job.yaml`
    Wait for isd-yaml-update-* pod to complete
     
     - Once pod will completed so please check the pod logs to verify manifest files are updated in Git or not.
@@ -96,27 +104,27 @@ Upgrade sequence: (4.0.3.1 to 4.0.4.3)
 
       `kubectl -n opsmx-isd logs isd-apply-yamls-xxx -c script` #Replacing the name of the pod name correctly, check the log of the script that pushes the yamls and applies them
 
-15. isd-spinnaker-halyard-0 pod should restart automatically. If not, execute this:
+16. isd-spinnaker-halyard-0 pod should restart automatically. If not, execute this:
    
       - `kubectl -n opsmx-isd  delete po isd-spinnaker-halyard-0`
 
-16. Restart all pods:
+17. Restart all pods:
       - `kubectl -n opsmx-isd scale deploy -l app=oes --replicas=0` Wait for a min or two
       - `kubectl -n opsmx-isd scale deploy -l app=oes --replicas=1` Wait for all pods to come to ready state
         
-17. Add the below configuration (if not already present) in the default/profiles/echo-local.yml for echo pods.
+18. Add the below configuration (if not already present) in the default/profiles/echo-local.yml for echo pods.
      ```
        ssd:
          name: preview-saas-ssd
          enable: false
        ```    
-18. If you enabled new Insights feature in step 8, please follow the post installation steps listed [here](https://docs.google.com/document/d/1FgbvGeylTmWKBFKZNs2mMkKlkxHpyzPMEy5wJCaKSxk/edit#heading=h.odfvfs38x0e3)
+19. If you enabled new Insights feature in step 8, please follow the post installation steps listed [here](https://docs.google.com/document/d/1FgbvGeylTmWKBFKZNs2mMkKlkxHpyzPMEy5wJCaKSxk/edit#heading=h.odfvfs38x0e3)
  
-19. Go to ISD UI and check that version number has changed in the top right corner (under Help menu)
+20. Go to ISD UI and check that version number has changed in the top right corner (under Help menu)
 
-20. Wait for about 5 min for autoconfiguration to take place.
+21. Wait for about 5 min for autoconfiguration to take place.
 
-21. If required: a) Connect Spinnaker again b) Configure pipeline-promotion again. To do this, in the ISD UI:
+22. If required: a) Connect Spinnaker again b) Configure pipeline-promotion again. To do this, in the ISD UI:
       - Click setup
       - Click Spinnaker tab at the top. Check if "External Accounts" and "Pipeline-promotion" columns show "yes". If any of them is "no":
       - Click "edit" on the 3 dots on the far right. Check the values already filled in, make changes if required and click "update".
