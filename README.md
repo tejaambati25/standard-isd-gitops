@@ -12,7 +12,7 @@ Should we have different infrastructure requirements, please contact OpsMx.
 
 1. Create an empty-repo (called the "gitops-repo" in the document),  "main" branch should be the default, and clone it locally
 2. Clone https://github.com/OpsMx/standard-isd-gitops, selecting the appropriate branch:
-- `git clone https://github.com/OpsMx/standard-isd-gitops -b 4.0.4.3`
+- `git clone https://github.com/OpsMx/standard-isd-gitops -b 2024.06.00`
 
 3. Copy contents of the standard-isd-repo to the gitops-repo created above using:
    
@@ -37,14 +37,11 @@ NOTE: We recommend that we start with the defaults, updating just the URL and gi
 - `kubectl create ns opsmx-isd` 
 - We should create these secrets in namespace before helm installation, Create secrets ldap,redis,db,rabbitmq with following secret names ldap-manager-password,rabbitmq,oes-redis,oes-db.
   
-  ```console
-  $ kubectl -n namespace create secret generic ldap-manager-password \
-  --from-literal LDAP_ADMIN_PASSWORD=opsmxadmin123 \
-  --from-literal LDAP_CONFIG_PASSWORD=opsmxconfig123 \
-  --from-literal ldapmanagerpassword=opsmxadmin123
-  $ kubectl -n namespace create secret generic oes-redis --from-literal redispassword=password
-  $ kubectl -n namespace create secret generic rabbitmq --from-literal rabbitmqpassword=Networks123
-  $ kubectl -n namespace create secret generic oes-db --from-literal pgpassword=networks123
+-  `kubectl -n namespace create secret generic ldap-manager-password --from-literal LDAP_ADMIN_PASSWORD=opsmxadmin123 --from-literal 
+    LDAP_CONFIG_PASSWORD=opsmxconfig123 --from-literal ldapmanagerpassword=opsmxadmin123`
+- `kubectl -n namespace create secret generic oes-redis --from-literal redispassword=password`
+- `kubectl -n namespace create secret generic rabbitmq --from-literal rabbitmqpassword=Networks123`
+- `kubectl -n namespace create secret generic oes-db --from-literal pgpassword=networks123`
 - `kubectl -n opsmx-isd apply -f install/inputcm.yaml` 
 - `kubectl -n opsmx-isd apply -f install/serviceaccount.yaml`
 
