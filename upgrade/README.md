@@ -72,31 +72,29 @@ Upgrade sequence: (4.0.4.2 to 2024.06.00)
          versionFrom: 4.0.4.2 ## We need to update this flag if we want to run migration from other ISD versions. For eg: versionFrom: 4.0.4.2
        ```
 10. Push changes to git: `git add -A; git commit -m "Upgrade related changes"; git push`
-
-11. `kubectl -n opsmx-isd apply -f upgrade-inputcm.yaml`
-     `kubectl patch configmap/upgrade-inputcm --type merge -p '{"data":{"release":"isd"}}' -n opsmx-isd` # Default release name is "isd".        
-   Please update it accordingly and apply the command
-
-12. `kubectl -n opsmx-isd apply -f serviceaccount.yaml` # Edit namespace if changed from the default "
-
-13. `kubectl -n opsmx-isd replace --force -f ISD-Generate-yamls-job.yaml`
-   [ Wait for isd-generate-yamls-* pod to complete ]
-
-    - Once the pod is completed please check the pod logs to verify manifest files are updated in GIt or not.
-
-      `kubectl -n opsmx-isd logs isd-generate-yamls-xxx -c git-clone` #Replacing the name of the pod name correctly, check if your gitops-repo is cloned correctly
-
-14. Compare and merge branch: This job should have created a branch on the gitops-repo with the helmchart version number specified in upgrade-inputcm.yaml. Raise a PR and check what changes are being made. Once satisfied, merge the PR.
-
-15. We should create these secrets in namespace before helm installation, Create secrets ldap,redis,db,rabbitmq with following secret names ldap-manager-password,rabbitmq,oes-redis,oes-db.
-  
+11. We should create these secrets in namespace before helm installation, Create secrets ldap,redis,db,rabbitmq with following secret names ldap-manager-password,rabbitmq,oes-redis,oes-db.
 -  `kubectl -n namespace create secret generic ldap-manager-password --from-literal LDAP_ADMIN_PASSWORD=opsmxadmin123 --from-literal 
     LDAP_CONFIG_PASSWORD=opsmxconfig123 --from-literal ldapmanagerpassword=opsmxadmin123`
 - `kubectl -n namespace create secret generic oes-redis --from-literal redispassword=password`
 - `kubectl -n namespace create secret generic rabbitmq --from-literal rabbitmqpassword=Networks123`
 - `kubectl -n namespace create secret generic oes-db --from-literal pgpassword=networks123`
 
-15. `kubectl -n opsmx-isd replace --force -f ISD-Apply-yamls-job.yaml`
+12. `kubectl -n opsmx-isd apply -f upgrade-inputcm.yaml`
+     `kubectl patch configmap/upgrade-inputcm --type merge -p '{"data":{"release":"isd"}}' -n opsmx-isd` # Default release name is "isd".        
+   Please update it accordingly and apply the command
+
+13. `kubectl -n opsmx-isd apply -f serviceaccount.yaml` # Edit namespace if changed from the default "
+
+14. `kubectl -n opsmx-isd replace --force -f ISD-Generate-yamls-job.yaml`
+   [ Wait for isd-generate-yamls-* pod to complete ]
+
+    - Once the pod is completed please check the pod logs to verify manifest files are updated in GIt or not.
+
+      `kubectl -n opsmx-isd logs isd-generate-yamls-xxx -c git-clone` #Replacing the name of the pod name correctly, check if your gitops-repo is cloned correctly
+
+15. Compare and merge branch: This job should have created a branch on the gitops-repo with the helmchart version number specified in upgrade-inputcm.yaml. Raise a PR and check what changes are being made. Once satisfied, merge the PR.
+
+16. `kubectl -n opsmx-isd replace --force -f ISD-Apply-yamls-job.yaml`
    Wait for isd-yaml-update-* pod to complete
     
     - Once pod will completed so please check the pod logs to verify manifest files are updated in Git or not.
@@ -105,21 +103,21 @@ Upgrade sequence: (4.0.4.2 to 2024.06.00)
 
       `kubectl -n opsmx-isd logs isd-apply-yamls-xxx -c script` #Replacing the name of the pod name correctly, check the log of the script that pushes the yamls and applies them
 
-16. isd-spinnaker-halyard-0 pod should restart automatically. If not, execute this:
+17. isd-spinnaker-halyard-0 pod should restart automatically. If not, execute this:
    
       - `kubectl -n opsmx-isd  delete po isd-spinnaker-halyard-0`
 
-17. Restart all pods:
+18. Restart all pods:
       - `kubectl -n opsmx-isd scale deploy -l app=oes --replicas=0` Wait for a min or two
       - `kubectl -n opsmx-isd scale deploy -l app=oes --replicas=1` Wait for all pods to come to ready state
         
-18. If you enabled new Insights feature in step 8, please follow the post installation steps listed [here](https://docs.google.com/document/d/1FgbvGeylTmWKBFKZNs2mMkKlkxHpyzPMEy5wJCaKSxk/edit#heading=h.odfvfs38x0e3)
+19. If you enabled new Insights feature in step 8, please follow the post installation steps listed [here](https://docs.google.com/document/d/1FgbvGeylTmWKBFKZNs2mMkKlkxHpyzPMEy5wJCaKSxk/edit#heading=h.odfvfs38x0e3)
  
-19. Go to ISD UI and check that version number has changed in the top right corner (under Help menu)
+20. Go to ISD UI and check that version number has changed in the top right corner (under Help menu)
 
-20. Wait for about 5 min for autoconfiguration to take place.
+21. Wait for about 5 min for autoconfiguration to take place.
 
-21. If required: a) Connect Spinnaker again b) Configure pipeline-promotion again. To do this, in the ISD UI:
+22. If required: a) Connect Spinnaker again b) Configure pipeline-promotion again. To do this, in the ISD UI:
       - Click setup
       - Click Spinnaker tab at the top. Check if "External Accounts" and "Pipeline-promotion" columns show "yes". If any of them is "no":
       - Click "edit" on the 3 dots on the far right. Check the values already filled in, make changes if required and click "update".
