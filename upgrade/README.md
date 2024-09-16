@@ -60,6 +60,7 @@ Upgrade sequence: (4.0.4.2 to 2024.06.00)
    - **If ISD Namespace is different from "opsmx-isd"**: Update namespace (default is opsmx-isd) to the namespace where ISD is installed
 7. **If ISD Namespace is different from "opsmx-isd"**: Edit serviceaccount.yaml and edit "namespace:" to update it to the ISD namespace (e.g.oes)
 8. Update values.yaml:
+   - change the Ldap manager password,redis URL and password,db password and rabbitmq passowrd.
 
    - (Optional) Refer to [this](https://docs.google.com/document/d/1FgbvGeylTmWKBFKZNs2mMkKlkxHpyzPMEy5wJCaKSxk/edit) document if you want to enable the new Insights pages (Pipeline Insights and User Insights) added to ISD.
    - **DB Upgrade**:
@@ -70,24 +71,24 @@ Upgrade sequence: (4.0.4.2 to 2024.06.00)
          enable: false
          versionFrom: 4.0.4.2 ## We need to update this flag if we want to run migration from other ISD versions. For eg: versionFrom: 4.0.4.2
        ```
-9. Push changes to git: `git add -A; git commit -m "Upgrade related changes"; git push`
+10. Push changes to git: `git add -A; git commit -m "Upgrade related changes"; git push`
 
-10. `kubectl -n opsmx-isd apply -f upgrade-inputcm.yaml`
+11. `kubectl -n opsmx-isd apply -f upgrade-inputcm.yaml`
      `kubectl patch configmap/upgrade-inputcm --type merge -p '{"data":{"release":"isd"}}' -n opsmx-isd` # Default release name is "isd".        
    Please update it accordingly and apply the command
 
-11. `kubectl -n opsmx-isd apply -f serviceaccount.yaml` # Edit namespace if changed from the default "
+12. `kubectl -n opsmx-isd apply -f serviceaccount.yaml` # Edit namespace if changed from the default "
 
-12. `kubectl -n opsmx-isd replace --force -f ISD-Generate-yamls-job.yaml`
+13. `kubectl -n opsmx-isd replace --force -f ISD-Generate-yamls-job.yaml`
    [ Wait for isd-generate-yamls-* pod to complete ]
 
     - Once the pod is completed please check the pod logs to verify manifest files are updated in GIt or not.
 
       `kubectl -n opsmx-isd logs isd-generate-yamls-xxx -c git-clone` #Replacing the name of the pod name correctly, check if your gitops-repo is cloned correctly
 
-13. Compare and merge branch: This job should have created a branch on the gitops-repo with the helmchart version number specified in upgrade-inputcm.yaml. Raise a PR and check what changes are being made. Once satisfied, merge the PR.
+14. Compare and merge branch: This job should have created a branch on the gitops-repo with the helmchart version number specified in upgrade-inputcm.yaml. Raise a PR and check what changes are being made. Once satisfied, merge the PR.
 
-14. We should create these secrets in namespace before helm installation, Create secrets ldap,redis,db,rabbitmq with following secret names ldap-manager-password,rabbitmq,oes-redis,oes-db.
+15. We should create these secrets in namespace before helm installation, Create secrets ldap,redis,db,rabbitmq with following secret names ldap-manager-password,rabbitmq,oes-redis,oes-db.
   
 -  `kubectl -n namespace create secret generic ldap-manager-password --from-literal LDAP_ADMIN_PASSWORD=opsmxadmin123 --from-literal 
     LDAP_CONFIG_PASSWORD=opsmxconfig123 --from-literal ldapmanagerpassword=opsmxadmin123`
