@@ -60,7 +60,7 @@ Upgrade sequence: (4.0.4.2 to 2024.06.00)
    - **If ISD Namespace is different from "opsmx-isd"**: Update namespace (default is opsmx-isd) to the namespace where ISD is installed
 7. **If ISD Namespace is different from "opsmx-isd"**: Edit serviceaccount.yaml and edit "namespace:" to update it to the ISD namespace (e.g.oes)
 8. Update values.yaml:
-   - Update the Ldap manager password,redis URL and password,db password and rabbitmq passowrd.
+   - Update the Ldap manager password,redis url and password,db password and rabbitmq passowrd.
 
    - (Optional) Refer to [this](https://docs.google.com/document/d/1FgbvGeylTmWKBFKZNs2mMkKlkxHpyzPMEy5wJCaKSxk/edit) document if you want to enable the new Insights pages (Pipeline Insights and User Insights) added to ISD.
    - **DB Upgrade**:
