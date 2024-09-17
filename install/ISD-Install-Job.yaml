@@ -131,10 +131,8 @@ spec:
                 if [ $?!= 0 ]; then echo "Error creating default secret miniopassword"; exit 1; fi
 
               fi
-              
 
               }
-
 
               for secret in $(echo $secrets | sed "s/,/ /g")
 
