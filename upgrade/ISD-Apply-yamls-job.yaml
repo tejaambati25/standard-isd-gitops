@@ -78,7 +78,7 @@ spec:
 
               then
 
-                kubectl -n $2 create secret generic generic oes-db --from-literal pgpassword=networks123
+                kubectl -n $2 create secret generic oes-db --from-literal pgpassword=networks123
 
                 if [ $?!= 0 ]; then echo "Error creating default secret oes-db"; exit 1; fi
 
