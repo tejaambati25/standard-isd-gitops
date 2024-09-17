@@ -25,7 +25,7 @@ data:
   #kubectl -n opsmx-isd create secret generic keystorepassword --from-literal keystorepassword=changeit
   #kubectl -n opsmx-isd create secret generic gittoken --from-literal=gittoken=<GIT TOKEN TO ACCESS THE REPO MENTIONED in "url" above>
   # Comma separated list of kubernetes secrets, without spaces
-  secrets: gittoken,keystorepassword,saporpassword,miniopassword
+  secrets: gittoken,ldap-manager-password,oes-db,keystorepassword,rabbitmq,saporpassword,oes-redis,miniopassword
 kind: ConfigMap
 metadata:
   name: inputcm
