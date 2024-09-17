@@ -34,22 +34,15 @@ NOTE: We recommend that we start with the defaults, updating just the URL and gi
 7. Edit the beta value to true in the `install/inputcm.yaml` file for beta releases only, let the default value be false (i.e. "false")
 8. Push all changes in the gitops-repo to git (e.g `git add -A; git commit -m"my changes";git push`)
 9. Create namespace, a configmap for inputs and a service account as follows [edit namespace (i.e. opsmx-isd) as appropriate]:
-- `kubectl create ns opsmx-isd` 
-- We should create these secrets in namespace before helm installation, Create secrets ldap,redis,db,rabbitmq with following secret names ldap-manager-password,rabbitmq,oes-redis,oes-db.
-  
--  `kubectl -n namespace create secret generic ldap-manager-password --from-literal LDAP_ADMIN_PASSWORD=opsmxadmin123 --from-literal 
-    LDAP_CONFIG_PASSWORD=opsmxconfig123 --from-literal ldapmanagerpassword=opsmxadmin123`
-- `kubectl -n namespace create secret generic oes-redis --from-literal redispassword=password`
-- `kubectl -n namespace create secret generic rabbitmq --from-literal rabbitmqpassword=Networks123`
-- `kubectl -n namespace create secret generic oes-db --from-literal pgpassword=networks123`
+- `kubectl create ns opsmx-isd`
+- `kubectl -n opsmx-isd apply -f install/inputcm.yaml` 
+- `kubectl -n opsmx-isd apply -f install/serviceaccount.yaml`
 
 ## Create secrets
 *ISD supports multiple secret managers for storing secrets such as DB passwords, SSO authenticatoin details and so on. Using kubernetes secrets is the default.*
 
 10. Create the following secrets. The default values are handled by the installer, except for gittoken. If you are using External SSO, DBs, etc. you might want to change them. Else, best to leave them at the defaults:
 - `kubectl -n opsmx-isd create secret generic gittoken --from-literal=gittoken=PUT_YOUR_GITTOKEN_HERE`
-- `kubectl -n opsmx-isd apply -f install/inputcm.yaml` 
-- `kubectl -n opsmx-isd apply -f install/serviceaccount.yaml`
 
 ### Optional
 *In case we want to change these, please enter the correct values and create the secrets*
@@ -61,6 +54,11 @@ NOTE: We recommend that we start with the defaults, updating just the URL and gi
 - `kubectl -n opsmx-isd create secret generic saporpassword --from-literal saporpassword=PUT_YOUR_SECRET_HERE`
 - `kubectl -n opsmx-isd create secret generic rabbitmqpassword --from-literal rabbitmqpassword=PUT_YOUR_SECRET_HERE`
 - `kubectl -n opsmx-isd create secret generic keystorepassword --from-literal keystorepassword=PUT_YOUR_SECRET_HERE`
+- `kubectl -n opsmx-isd create secret generic ldap-manager-password --from-literal LDAP_ADMIN_PASSWORD=PUT_YOUR_SECRET_HERE --from-literal 
+    LDAP_CONFIG_PASSWORD=PUT_YOUR_SECRET_HERE --from-literal ldapmanagerpassword=PUT_YOUR_SECRET_HERE`
+- `kubectl -n opsmx-isd create secret generic oes-redis --from-literal redispassword=PUT_YOUR_SECRET_HERE`
+- `kubectl -n opsmx-isd create secret generic rabbitmq --from-literal rabbitmqpassword=PUT_YOUR_SECRET_HERE`
+- `kubectl -n opsmx-isd create secret generic oes-db --from-literal pgpassword=PUT_YOUR_SECRET_HERE`
 
 ## Start the installation
 *The installation is done by a kubenetes job that processes the secrets, generates YAMLs, stores them into the git-repo and creats the objectes in Kubernetes.*
