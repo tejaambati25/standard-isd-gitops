@@ -10,7 +10,7 @@ services:
   clouddriver: 
     image: quay.io/opsmxpublic/ubi8-clouddriver-cve:1.33.3-1589fb9-202408200836
   front50:
-    image: quay.io/opsmxpublic/ubi8-front50-cve:1.33.3-2a5387c-202408200836
+    image: quay.io/opsmxpublic/ubi8-front50-cve:1.33.3-d228409-202409161124
   echo:
     image: quay.io/opsmxpublic/ubi8-echo-cve:1.33.3-abafec6-202408200836
   rosco:
@@ -18,8 +18,8 @@ services:
   igor:
     image: quay.io/opsmxpublic/ubi8-igor-cve:1.33.3-c2684b2-202408200836
   deck:
-    image: quay.io/opsmxpublic/ubi8-oes-custom-deck-cve:88650d4a3
+    image: quay.io/opsmxpublic/ubi8-oes-custom-deck-cve:d121a72b0
   orca:
-    image: quay.io/opsmxpublic/ubi8-orca-cve:1.33.3-cc52fdf-202408200836
+    image: quay.io/opsmxpublic/ubi8-orca-cve:1.33.3-c6d751dca-202409130923
   gate:
     image: quay.io/opsmxpublic/ubi8-gate-cve:1.33.3-94a16ab-202408200836 

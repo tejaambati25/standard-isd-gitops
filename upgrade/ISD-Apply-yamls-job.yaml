@@ -64,23 +64,23 @@ spec:
 
               fi
 
-              if [[ $1 == "ldap-manager-password" ]]
+              if [[ $1 == "ldappassword" ]]
 
               then
 
-                kubectl -n $2 create secret generic ldap-manager-password --from-literal LDAP_ADMIN_PASSWORD=opsmxadmin123 --from-literal  LDAP_CONFIG_PASSWORD=opsmxconfig123 --from-literal  ldapmanagerpassword=opsmxadmin123
+                kubectl -n $2 create secret generic ldappassword --from-literal ldappassword=opsmxadmin123
 
-                if [ $?!= 0 ]; then echo "Error creating default secret ldap-manager-password"; exit 1; fi
+                if [ $?!= 0 ]; then echo "Error creating default secret ldappassword"; exit 1; fi
 
               fi
 
-              if [[ $1 == "oes-db" ]]
+              if [[ $1 == "dbpassword" ]]
 
               then
 
-                kubectl -n $2 create secret generic oes-db --from-literal pgpassword=networks123
+                kubectl -n $2 create secret generic dbpassword --from-literal dbpassword=networks123
 
-                if [ $?!= 0 ]; then echo "Error creating default secret oes-db"; exit 1; fi
+                if [ $?!= 0 ]; then echo "Error creating default secret dbpassword"; exit 1; fi
 
               fi
 
@@ -94,13 +94,13 @@ spec:
 
               fi
 
-              if [[ $1 == "rabbitmq" ]]
+              if [[ $1 == "rabbitmqpassword" ]]
 
               then
 
-                kubectl -n $2 create secret generic rabbitmq --from-literal rabbitmqpassword=Networks123
+                kubectl -n $2 create secret generic rabbitmqpassword --from-literal rabbitmqpassword=Networks123
 
-                if [ $?!= 0 ]; then echo "Error creating default secret rabbitmq"; exit 1; fi
+                if [ $?!= 0 ]; then echo "Error creating default secret rabbitmqpassword"; exit 1; fi
 
               fi
 
@@ -114,13 +114,13 @@ spec:
 
               fi
 
-              if [[ $1 == "oes-redis" ]]
+              if [[ $1 == "redispassword" ]]
 
               then
 
-                kubectl -n $2 create secret generic oes-redis --from-literal redispassword=password
+                kubectl -n $2 create secret generic redispassword --from-literal redispassword=password
 
-                if [ $?!= 0 ]; then echo "Error creating default secret oes-redis"; exit 1; fi
+                if [ $?!= 0 ]; then echo "Error creating default secret redispassword"; exit 1; fi
 
               fi
 
@@ -134,7 +134,18 @@ spec:
 
               fi
 
+              if [[ $1 == "ldapconfigpassword" ]]
+
+              then
+
+                kubectl -n $2 create secret generic ldapconfigpassword --from-literal ldapconfigpassword=opsmxadmin123
+
+                if [ $?!= 0 ]; then echo "Error creating default secret ldapconfigpassword"; exit 1; fi
+
+              fi
+
               }
+
 
               for secret in $(echo $secrets | sed "s/,/ /g")
 

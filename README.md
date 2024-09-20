@@ -24,7 +24,7 @@ Should we have different infrastructure requirements, please contact OpsMx.
 *The installation process requires inputs such as the application version, git-repo details and so on.*
 
 4. In the gitops-repo cloned to disk and edit `install/inputcm.yaml`. This should be updated, at a **minimum**, with gitrepo url,username and gitemail.
-5. **Update Values.yaml as required**, specifically: At **minimum** the ISD URL and gitops-repo details in spinnaker.gitopsHalyard section must be updated. Full values.yaml is available at: https://github.com/OpsMx/enterprise-spinnaker/tree/v4.0.4.3/charts/oes 
+5. **Update Values.yaml as required**, specifically: At **minimum** the ISD URL and gitops-repo details in spinnaker.gitopsHalyard section must be updated. Full values.yaml is available at: https://github.com/OpsMx/enterprise-spinnaker/tree/v4.isd-spin-2024.06.00/charts/oes 
 
 - (Optional) Refer to [this](https://docs.google.com/document/d/1FgbvGeylTmWKBFKZNs2mMkKlkxHpyzPMEy5wJCaKSxk/edit) document if you want to enable the new Insights pages (Pipeline Insights and User Insights) added to ISD.
 
@@ -47,14 +47,13 @@ NOTE: We recommend that we start with the defaults, updating just the URL and gi
 ### Optional
 *In case we want to change these, please enter the correct values and create the secrets*
 
-- `kubectl -n opsmx-isd create secret generic ldap-manager-password --from-literal LDAP_ADMIN_PASSWORD=PUT_YOUR_SECRET_HERE --from-literal 
-    LDAP_CONFIG_PASSWORD=PUT_YOUR_SECRET_HERE --from-literal ldapmanagerpassword=PUT_YOUR_SECRET_HERE`
+- `kubectl -n opsmx-isd create secret generic ldapconfigpassword --from-literal ldapconfigpassword=PUT_YOUR_SECRET_HERE`
+- `kubectl -n opsmx-isd create secret generic ldappassword --from-literal ldappassword=PUT_YOUR_SECRET_HERE`
 - `kubectl -n opsmx-isd create secret generic miniopassword --from-literal miniopassword=PUT_YOUR_SECRET_HERE`
+- `kubectl -n opsmx-isd create secret generic redispassword --from-literal redispassword=PUT_YOUR_SECRET_HERE`
 - `kubectl -n opsmx-isd create secret generic saporpassword --from-literal saporpassword=PUT_YOUR_SECRET_HERE`
+- `kubectl -n opsmx-isd create secret generic rabbitmqpassword --from-literal rabbitmqpassword=PUT_YOUR_SECRET_HERE`
 - `kubectl -n opsmx-isd create secret generic keystorepassword --from-literal keystorepassword=PUT_YOUR_SECRET_HERE`
-- `kubectl -n opsmx-isd create secret generic oes-redis --from-literal redispassword=PUT_YOUR_SECRET_HERE`
-- `kubectl -n opsmx-isd create secret generic rabbitmq --from-literal rabbitmqpassword=PUT_YOUR_SECRET_HERE`
-- `kubectl -n opsmx-isd create secret generic oes-db --from-literal pgpassword=PUT_YOUR_SECRET_HERE`
 
 ## Start the installation
 *The installation is done by a kubenetes job that processes the secrets, generates YAMLs, stores them into the git-repo and creats the objectes in Kubernetes.*
