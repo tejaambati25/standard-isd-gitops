@@ -1738,5 +1738,8 @@ policy:
   opa:
     enabled: true
     url: http://oes-sapor:8085
+    failOpen:
+      enabled: false
+      timeout: 10
 pipeline:
   rbac: false
