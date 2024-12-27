@@ -63,7 +63,7 @@ Upgrade sequence:
 8. Update values.yaml:
 
    - Set `autoInstallSampleApps` to false
-   - (Optional) Refer to [this](https://docs.google.com/document/d/1aGzMEmXyVyrN_G9rU6VuCaz_H6X5u3OnpzZjhDKptcM/edit?tab=t.0#heading=h.ugse09v98wzj) document if you want to enable the new Insights pages (Pipeline Insights and User Insights) added to ISD.
+   - (Optional) Refer to [this](https://docs.google.com/document/d/1aGzMEmXyVyrN_G9rU6VuCaz_H6X5u3OnpzZjhDKptcM/edit?tab=t.0#heading=h.ugse09v98wzj) document if you want to enable the new Insights pages (Pipeline Insights,User Insights and Deployment Insights) added to ISD.
    - **DB Upgrade**:
    
        Set the `dbmigration enabled` flag to 
