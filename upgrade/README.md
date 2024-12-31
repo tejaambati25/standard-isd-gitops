@@ -67,23 +67,13 @@ Upgrade sequence:
    - **DB Upgrade**:
    
        Set the `dbmigration enabled` flag to 
-	   - `true`, if you are upgrading ISD from a version older than 4.0.4.1 (e.g. 4.0.3.1) 
-	   - `false`, if you are upgrading ISD from 4.0.4.1 or a newer version.
+	   - `false`, if you are upgrading ISD from 2024.06.00 or a newer version.
         
-	   If `dbmigration enaled` is set to true, set the `dbmigration versionFrom` property to the ISD version in numeric (e.g. 4.0.3.1 or 4.0.4.2 or 4.0.4.3 ) you are currently running. 
-	   
-	   Sample configuration for upgrade from ISD 4.0.3.1  
-       ```
-       dbmigration:
-         enable: true
-         versionFrom: 4.0.3.1 ## We need to update this flag if we want to run migration from other ISD versions. For eg: versionFrom: 4.0.3.1
-       ```
-	   
-       Sample configuration for upgrade from ISD 4.0.4.2 
+       Sample configuration for upgrade from ISD 2024.06.00 
        ```
        dbmigration:
          enable: false
-         versionFrom: 4.0.4.2 ## We need to update this flag if we want to run migration from other ISD versions. For eg: versionFrom: 4.0.3.1
+         versionFrom: 2024.06.00 ## We need to update this flag if we want to run migration from other ISD versions. For eg: versionFrom: 4.0.3.1
        ```	   
 9. Push changes to git: `git add -A; git commit -m "Upgrade related changes"; git push`
 10. `kubectl -n opsmx-isd apply -f upgrade-inputcm.yaml`
